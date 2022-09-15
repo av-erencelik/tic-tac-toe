@@ -1,0 +1,23 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "sass --watch public/scss/input.scss:public/css/output.css --style compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/av-erencelik/tic-tac-toe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/av-erencelik/tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/av-erencelik/tic-tac-toe#readme",
+  "dependencies": {
+    "node": "^18.9.0"
+  }
+}
