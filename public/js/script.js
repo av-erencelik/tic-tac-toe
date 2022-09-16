@@ -4,49 +4,68 @@ const gameBoard = () => {
     squares.forEach((e) => board.push(e))
     return board
 }
-const game = (player1,player2,board) => {
+const game = (player,ai,board) => {
     let squares = document.querySelectorAll("#square")
-    let xTurn = true
+    let playerTurn;
+    if(player.sign == "X") {
+        playerTurn = true
+    }else {playerTurn=false}
+    if(!playerTurn) {
+        aiPlay()
+        console.log("1")
+    }
     let status = checkWinner(board)
     let text = document.getElementById("text")
     console.log(board)
-    changeText(xTurn)
+    changeText(playerTurn)
     squares.forEach(function(elem) {
         elem.addEventListener("click", function handler() {
             this.removeEventListener("click",handler)
             if(status.isThereAWinner) {
                  return
             }
-            xTurn = playRound(board,elem.getAttribute("data-index"),xTurn,player1,player2)
-            changeText(xTurn)
+            playerTurn = playRound(board,elem.getAttribute("data-index"),player)
+            changeText(playerTurn)
             status = checkWinner(board)
             if(status.isThereAWinner) {
-                if(status.winnerSign == "X") {
-                    text.textContent = "Winner is Player 1"
-                }else {
-                    text.textContent = "Winner is Player 2"                 
+                if(status.winnerSign == player.sign) {
+                    text.textContent = "Winner is Player"
+                    return
+                }else if (status.winnerSign = "") {
+                    return
+                }          
+                else {
+                    text.textContent = "Winner is AI"        
+                    return         
+                }
+            }
+            aiPlay()
+            status = checkWinner(board)
+            if(status.isThereAWinner) {
+                if(status.winnerSign == player.sign) {
+                    text.textContent = "Winner is Player"
+                    return
+                }else if (status.winnerSign = "") {
+                    return
+                }          
+                else {
+                    text.textContent = "Winner is AI"        
+                    return         
                 }
             }
             
         })
     })
-    const handleInput = () => {
-        this.removeEventListener("click",handler)
-        if(status.isThereAWinner) {
-                 return
+    function aiPlay() {
+        let square = Math.floor(Math.random() * 9)
+        console.log(board[square].textContent)
+        while(!(board[square].textContent == "")) {
+            square = Math.floor(Math.random() * 9)
         }
-        xTurn = playRound(board,elem.getAttribute("data-index"),xTurn,player1,player2)
-        changeText(xTurn)
-        status = checkWinner(board)
-        if(status.isThereAWinner) {
-             if(status.winnerSign == "X") {
-                    text.textContent = "Winner is Player 1"
-            }else {
-                    text.textContent = "Winner is Player 2"                 
-            }
-            }
+        console.log(square)
+        squares[square].textContent = ai.sign
+        playerTurn=true
     }
-    console.log(xTurn)
 }
 
 const checkWinner= (board) => {
@@ -61,6 +80,8 @@ const checkWinner= (board) => {
     }
     if(!(checkBoard.includes(""))) {
         document.getElementById("text").textContent = "DRAW"
+        isThereAWinner = true
+        return {isThereAWinner, winnerSign}
     }
     console.log(checkBoard)
     if (checkBoard[0] === checkBoard[1] && checkBoard[1]=== checkBoard[2] && checkBoard[0] != "") {
@@ -92,20 +113,15 @@ const checkWinner= (board) => {
 function changeText(turn) {
     let text = document.getElementById("text")
     if(turn) {
-        text.textContent = "Player1's Turn"
+        text.textContent = "Player's Turn"
     }else {
-        text.textContent = "Player2's Turn"
+        text.textContent = "AI's Turn"
     }
 }
 
-function playRound(board, i,xTurn,player1,player2) {
-    if(xTurn) {
-        board[i].textContent = player1.sign
-        return false
-    }else {
-        board[i].textContent = player2.sign
-        return true
-    }
+function playRound(board, i,player) { 
+    board[i].textContent = player.sign 
+    return false
 }
 const createPlayer = (name,sign) => {
     return {name,sign}
@@ -133,23 +149,22 @@ function handlePlayer(sign,xSign,ySign) {
     let board = gameBoard()
     restartButton = document.getElementById("restart")
     restartButton.style.display = "inline-block"
-    let player1
-    let player2
+    let player
+    let ai
     if(sign === "X") {
-        player1 = createPlayer("player1", "X")
-        player2 = createPlayer("player2", "O")
+        player = createPlayer("player", "X")
+        ai = createPlayer("ai", "O")
     }else {
-        player2 = createPlayer("player2", "O")
-        player1 = createPlayer("player1", "X")
+        player = createPlayer("player", "O")
+        ai = createPlayer("ai", "X")
     }
     restartButton.addEventListener("click", function handle() {
-        restart(board,restartButton,player1,player2)
+        restart(board,restartButton)
         this.removeEventListener("click",handle)
     })
     xSign.style.display = "none"
     ySign.style.display = "none"
-    console.log(player1,player2)
-    game(player1,player2,board)
+    game(player,ai,board)
 }
 function restart(board,restartButton) {
     for(let i = 0; i < 9; i++) {
