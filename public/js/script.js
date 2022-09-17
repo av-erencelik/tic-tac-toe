@@ -24,6 +24,7 @@ const game = (player,ai,board) => {
             if(status.isThereAWinner) {
                  return
             }
+            if(board[elem.getAttribute("data-index")].textContent == "X" || board[elem.getAttribute("data-index")].textContent == "O" ) {return}
             playerTurn = playRound(board,elem.getAttribute("data-index"),player)
             changeText(playerTurn)
             status = checkWinner(board)
@@ -40,6 +41,7 @@ const game = (player,ai,board) => {
                 }
             }
             aiPlay()
+            changeText(playerTurn)
             status = checkWinner(board)
             if(status.isThereAWinner) {
                 if(status.winnerSign == player.sign) {
@@ -159,19 +161,24 @@ function handlePlayer(sign,xSign,ySign) {
         ai = createPlayer("ai", "X")
     }
     restartButton.addEventListener("click", function handle() {
-        restart(board,restartButton)
+        restart(board,restartButton,player,ai)
         this.removeEventListener("click",handle)
     })
     xSign.style.display = "none"
     ySign.style.display = "none"
     game(player,ai,board)
 }
-function restart(board,restartButton) {
+function restart(board,restartButton,player,ai) {
     for(let i = 0; i < 9; i++) {
         board[i].textContent = ""
     }
     console.log(board)
-    restartButton.style.display = "none"
+    restartButton = document.getElementById("restart")
+    restartButton.addEventListener("click", function handle() {
+        restart(board,restartButton,player,ai)
+        this.removeEventListener("click",handle)
+    })
     changeText(true)
-    signChoice()
+    board = gameBoard()
+    game(player,ai,board)
 }
