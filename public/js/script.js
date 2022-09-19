@@ -12,11 +12,9 @@ const game = (player,ai,board) => {
     }else {playerTurn=false}
     if(!playerTurn) {
         aiPlay()
-        console.log("1")
     }
     let status = checkWinner(board)
     let text = document.getElementById("text")
-    console.log(board)
     changeText(playerTurn)
     squares.forEach(function(elem) {
         elem.addEventListener("click", function handler() {
@@ -60,11 +58,9 @@ const game = (player,ai,board) => {
     })
     function aiPlay() {
         let square = Math.floor(Math.random() * 9)
-        console.log(board[square].textContent)
         while(!(board[square].textContent == "")) {
             square = Math.floor(Math.random() * 9)
         }
-        console.log(square)
         squares[square].textContent = ai.sign
         playerTurn=true
     }
@@ -85,7 +81,6 @@ const checkWinner= (board) => {
         isThereAWinner = true
         return {isThereAWinner, winnerSign}
     }
-    console.log(checkBoard)
     if (checkBoard[0] === checkBoard[1] && checkBoard[1]=== checkBoard[2] && checkBoard[0] != "") {
         isThereAWinner = true
         winnerSign = checkBoard[0]
@@ -172,7 +167,6 @@ function restart(board,restartButton,player,ai) {
     for(let i = 0; i < 9; i++) {
         board[i].textContent = ""
     }
-    console.log(board)
     restartButton = document.getElementById("restart")
     restartButton.addEventListener("click", function handle() {
         restart(board,restartButton,player,ai)
